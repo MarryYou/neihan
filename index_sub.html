@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.mui-table-view {
+				background: none;
+			}
+			
+			.mui-card-content {
+				width: 90%;
+				height: 90%;
+				margin-top: 3%;
+				padding-bottom: 4%;
+				margin-left: 5%;
+			}
+		</style>
+		<script src="js/mui.min.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script type="text/javascript">
+			var jq = jQuery;
+			var datahtml;
+			var firstChild;
+			mui.init({
+				pullRefresh: {
+					container: "#refreshContainer", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+					up: {
+						height: 50, //可选.默认50.触发上拉加载拖动距离
+						auto: false, //可选,默认false.自动上拉加载一次
+						contentrefresh: "正在加载...", //可选，正在加载状态时，上拉加载控件上显示的标题内容
+						contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
+						callback: loadmore //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+					}
+				}
+			});
+			mui.ready(function() {
+				loading();
+			});
+
+			function loading() {
+				datahtml = "";
+
+				jq.ajax({
+					type: "get",
+					async: false,
+					url: "http://lf.snssdk.com/neihan/stream/mix/v1/?content_type=-102",
+					dataType: "jsonp",
+					jsonp: "callback",
+					jsonpCallback: "JsonCallback",
+					scriptCharset: 'GBK', //设置编码，否则会乱码
+					success: function(data) {
+						var list = data["data"].data;
+						console.log(list[0].group);
+						for(var i = 0; i < list.length; i++) {
+							var li = document.createElement("li");
+							datahtml = '<div class="mui-card con">' +
+								'<div class="mui-card-header" id="tit">' + list[i].group.category_name + '</div>' +
+								'<div class="mui-card-content" id="content">' + list[i].group.content +
+								'</div> </div>';
+							li.innerHTML = datahtml;
+							document.querySelector(".mui-table-view ").appendChild(li);
+						}
+
+					},
+					error: function() {
+						mui.toast("请检查您的网络连接！");
+					}
+				});
+
+			}
+
+			function loadmore() {
+				datahtml = "";
+				var elem = this;
+
+				setTimeout(function() {
+					jq.ajax({
+						type: "get",
+						async: false,
+						url: "http://lf.snssdk.com/neihan/stream/mix/v1/?content_type=-102",
+						dataType: "jsonp",
+						jsonp: "callback",
+						jsonpCallback: "JsonCallback",
+						scriptCharset: 'GBK', //设置编码，否则会乱码
+						success: function(data) {
+							var list = data["data"].data;
+							console.log(list[0].group);
+							for(var i = 0; i < list.length; i++) {
+								var li = document.createElement("li");
+								datahtml = '<div class="mui-card">' +
+									'<div class="mui-card-header" id="tit">' + list[i].group.category_name + '</div>' +
+									'<div class="mui-card-content" id="content">' + list[i].group.content +
+									'</div> </div>';
+								li.innerHTML = datahtml;
+								document.querySelector(".mui-table-view ").appendChild(li);
+							}
+						},
+						error: function() {
+							mui.toast("请检查您的网络连接！");
+						}
+					});
+				}, 1000);
+				setTimeout(function() {
+					mui.toast("已获取最新最好玩的段子了！");
+					elem.endPullupToRefresh(false);
+
+				}, 1500);
+			}
+		</script>
+	</head>
+
+	<body>
+		<div id="refreshContainer" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<!--数据列表-->
+				<ul class="mui-table-view mui-table-view-chevron">
+				</ul>		
+			</div>
+		</div>
+	</body>
+
+</html>

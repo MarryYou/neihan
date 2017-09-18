@@ -1,0 +1,50 @@
+{
+  "video_sub.html": {
+    "href": "video_sub.html",
+    "resources": [
+      "css/mui.min.css",
+      "js/mui.min.js",
+      "js/jquery.min.js"
+    ],
+    "refer": [],
+    "priority": 0
+  },
+  "pic.html": {
+    "href": "pic.html",
+    "resources": [
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "css/index.css",
+      "js/iconfont.js"
+    ],
+    "refer": [
+      "index.html",
+      "video_sub.html"
+    ],
+    "priority": 0
+  },
+  "index_sub.html": {
+    "href": "index_sub.html",
+    "resources": [
+      "css/mui.min.css",
+      "js/mui.min.js",
+      "js/jquery.min.js"
+    ],
+    "refer": [],
+    "priority": 0
+  },
+  "index.html": {
+    "href": "index.html",
+    "resources": [
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "css/index.css",
+      "js/iconfont.js"
+    ],
+    "refer": [
+      "pic.html",
+      "index_sub.html"
+    ],
+    "priority": 0
+  }
+}
